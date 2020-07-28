@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using feeddcity.Common;
+using feeddcity.Interfaces;
+using feeddcity.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -25,6 +28,8 @@ namespace feeddcity
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<ICommon, Common.Common>();
+            services.AddSingleton<IUser, UserService>();
             services.AddControllers();
         }
 
