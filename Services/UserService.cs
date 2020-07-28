@@ -1,10 +1,14 @@
 using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Cryptography;
+using System.Text;
 using Dapper;
 using feeddcity.Common;
 using feeddcity.Data;
 using feeddcity.Interfaces;
 using feeddcity.Models.User;
+using Microsoft.IdentityModel.Tokens;
 
 namespace feeddcity.Services
 {
@@ -75,7 +79,19 @@ namespace feeddcity.Services
 
         public string GenerateAuthToken(User user)
         {
-            throw new System.NotImplementedException();
+            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+            byte[] jwtSecret = Encoding.ASCII.GetBytes(_common.GetAuthSecretKey());
+            SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor();
+            Dictionary<string, object> claims = new Dictionary<string, object>
+            {
+                ["UserId"] = user.Id,
+                ["UserName"] = user.Username,
+            };
+            tokenDescriptor.Claims = claims;
+            tokenDescriptor.Expires = DateTime.UtcNow.AddDays(7);
+            tokenDescriptor.SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(jwtSecret), SecurityAlgorithms.HmacSha256Signature);
+            SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
         }
 
         public AuthenticatedUserClaimsModel GetUserClaims()
