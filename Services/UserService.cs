@@ -43,12 +43,34 @@ namespace feeddcity.Services
 
         public User GetUser(string emailAddress)
         {
-            throw new System.NotImplementedException();
+            var connection = _common.GetConnection();
+            connection.Open();
+            string sql = "SELECT * from Users WHERE Email = @EmailAddress;";
+            User user = connection.QueryFirstOrDefault<User>(sql, new { EmailAddress = emailAddress });
+            connection.Close();
+            return user;
         }
 
         public User AuthenticateUser(string emailAddress, string password)
         {
-            throw new System.NotImplementedException();
+            User user = GetUser(emailAddress);
+            if (user == null)
+            {
+                return null;
+            }
+            byte[] hashBytes = Convert.FromBase64String(user.HashedPassword);
+            byte[] salt = new byte[16];
+            Array.Copy(hashBytes, 0, salt, 0, 16);
+            var rfcBytes = new Rfc2898DeriveBytes(password, salt, 10000);
+            byte[] hash = rfcBytes.GetBytes(20);
+            for (int i = 0; i < 20; i++)
+            {
+                if (hashBytes[i + 16] != hash[i])
+                {
+                    return null;
+                }
+            }
+            return user;
         }
 
         public string GenerateAuthToken(User user)
