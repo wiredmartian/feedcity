@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Dapper;
@@ -8,6 +10,7 @@ using feeddcity.Common;
 using feeddcity.Data;
 using feeddcity.Interfaces;
 using feeddcity.Models.User;
+using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 
 namespace feeddcity.Services
@@ -15,9 +18,11 @@ namespace feeddcity.Services
     public class UserService: IUser
     {
         private readonly ICommon _common;
-        public UserService(ICommon common)
+        private readonly IHttpContextAccessor _contextAccessor;
+        public UserService(ICommon common, IHttpContextAccessor contextAccessor)
         {
             _common = common;
+            _contextAccessor = contextAccessor;
         }
         public int CreateUser(CreateUserModel user)
         {
@@ -96,7 +101,20 @@ namespace feeddcity.Services
 
         public AuthenticatedUserClaimsModel GetUserClaims()
         {
-            throw new System.NotImplementedException();
+            AuthenticatedUserClaimsModel userClaims = new AuthenticatedUserClaimsModel();
+            IEnumerable<Claim> claims = _contextAccessor.HttpContext.User.Claims;
+            Claim[] enumerable = claims as Claim[] ?? claims.ToArray();
+            string userId = enumerable?.SingleOrDefault(x => x.Type == "UserId")?.Value;
+            userClaims.UserName = enumerable?.SingleOrDefault(x => x.Type == "UserName")?.Value;
+            if (userId != null && !string.IsNullOrEmpty(userId))
+            {
+                userClaims.UserId = int.Parse(userId);
+            }
+            else
+            {
+                return null;
+            }
+            return userClaims;
         }
     }
 }
