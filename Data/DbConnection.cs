@@ -5,7 +5,7 @@ namespace feeddcity.Data
 {
     public class DbConnection : IDisposable
     {
-        private MySqlConnection Connection;
+        public MySqlConnection Connection;
 
         public DbConnection(string connectionString)
         {
