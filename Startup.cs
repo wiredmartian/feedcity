@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using feeddcity.Common;
+using feeddcity.Data;
 using feeddcity.Interfaces;
 using feeddcity.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -30,6 +32,9 @@ namespace feeddcity
         {
             services.AddSingleton<ICommon, Common.Common>();
             services.AddSingleton<IUser, UserService>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddTransient<DbConnection>(provider =>
+                new DbConnection(Configuration.GetConnectionString("DefaultConnection")));
             services.AddControllers();
         }
 

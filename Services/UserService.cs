@@ -19,10 +19,12 @@ namespace feeddcity.Services
     {
         private readonly ICommon _common;
         private readonly IHttpContextAccessor _contextAccessor;
-        public UserService(ICommon common, IHttpContextAccessor contextAccessor)
+        private readonly DbConnection _dbConnection;
+        public UserService(ICommon common, IHttpContextAccessor contextAccessor, DbConnection dbConnection)
         {
             _common = common;
             _contextAccessor = contextAccessor;
+            _dbConnection = dbConnection;
         }
         public int CreateUser(CreateUserModel user)
         {
@@ -36,8 +38,8 @@ namespace feeddcity.Services
             string hashedPassword = Convert.ToBase64String(hashBytes);
             
             const string sql = "INSERT INTO Users (FirstName, LastName, Email, UserName, HashedPassword) VALUES (@FirstName, @LastName, @Email, @UserName, @HashedPassword);";
-            var connection = _common.GetConnection();
-            connection.Open();
+            var connection = _dbConnection.Connection;
+            // connection.Open();
             int affectedRows = connection.Execute(sql, new
             {
                 user.FirstName,
@@ -46,17 +48,17 @@ namespace feeddcity.Services
                 UserName = user.EmailAddress,
                 hashedPassword
             });
-            connection.Close();
+            // connection.Close();
             return affectedRows;
         }
 
         public User GetUser(string emailAddress)
         {
-            var connection = _common.GetConnection();
-            connection.Open();
+            var connection = _dbConnection.Connection;
+            // connection.Open();
             string sql = "SELECT * from Users WHERE Email = @EmailAddress;";
             User user = connection.QueryFirstOrDefault<User>(sql, new { EmailAddress = emailAddress });
-            connection.Close();
+            // connection.Close();
             return user;
         }
 
