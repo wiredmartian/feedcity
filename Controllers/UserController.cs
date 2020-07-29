@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using feeddcity.Data;
 using feeddcity.Interfaces;
@@ -26,17 +27,52 @@ namespace feeddcity.Controllers
                 return BadRequest(ModelState.Values.SelectMany(err => err.Errors[0].ErrorMessage));
             }
 
-            User userExists = userSvc.GetUser(userModel.EmailAddress);
-            if (userExists != null)
+            try
             {
-                return BadRequest(new { message = $"A user with email {userModel.EmailAddress} is already exists" });
+                User userExists = userSvc.GetUser(userModel.EmailAddress);
+                if (userExists != null)
+                {
+                    return BadRequest(new {message = $"A user with email {userModel.EmailAddress} is already exists"});
+                }
+
+                int affectedRows = userSvc.CreateUser(userModel);
+                if (affectedRows == 0)
+                {
+                    return BadRequest(new {message = "Failed to create user account"});
+                }
+
+                return Ok(new {message = "User created"});
             }
-            int affectedRows = userSvc.CreateUser(userModel);
-            if (affectedRows == 0)
+            catch (Exception e)
             {
-                return BadRequest(new { message = "Failed to create user account"});
+                return BadRequest(new {message = e.Message });
+
             }
-            return Ok(new { message = "User created" });
+        }
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("/api/user/token")]
+        public IActionResult AuthUser([FromBody] LoginUserModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new { message = "Incorrect email or password" });
+            }
+            try
+            {
+                User currentUser = userSvc.AuthenticateUser(model.EmailAddress, model.Password);
+                if (currentUser == null)
+                {
+                    return BadRequest(new { message = "Incorrect email or password" });
+                }
+
+                string token = userSvc.GenerateAuthToken(currentUser);
+                return Ok(new { token = token });
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { message = e.Message });
+            }
         }
     }
 }
