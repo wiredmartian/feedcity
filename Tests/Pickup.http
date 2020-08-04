@@ -1,0 +1,11 @@
+POST http://localhost:5000/api/pickup
+Content-Type: application/json
+
+{
+  "Location": "11 Mars Milky Way",
+  "Latitude": "32.93482",
+  "Longitude": "-21.98234",
+  "ContactName": "Wired Martian",
+  "ContactNumber": "0117600656",
+  "Notes": "Bread, 3 Milk"
+}
