@@ -37,7 +37,6 @@ namespace feeddcity.Controllers
             {
                 return BadRequest(new { message = e.Message });
             }
-            return Ok();
         }
     }
 }
