@@ -7,7 +7,7 @@ using feeddcity.Models.User;
 
 namespace feeddcity.Services
 {
-    public class PickUpService
+    public class PickUpService : IPickUp
     {
         
         private readonly ICommon _common;
@@ -27,12 +27,12 @@ namespace feeddcity.Services
             var connection = _dbConnection.Connection;
             int rows = connection.Execute(sql, new
             {
-                UserId = userClaims.UserId, 
-                Location = model.Location, 
-                Latitude = model.Latitude, 
-                Longitude = model.Longitude, 
-                ContactName = model.ContactName, 
-                ContactNumber = model.ContactNumber, 
+                userClaims.UserId,
+                model.Location,
+                model.Latitude,
+                model.Longitude,
+                model.ContactName,
+                model.ContactNumber, 
                 Status = PickUpStatus.Pending
             });
             return rows;
