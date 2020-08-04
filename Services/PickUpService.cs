@@ -23,7 +23,7 @@ namespace feeddcity.Services
         public int RequestPickUp(PickUpRequestModel model)
         {
             AuthenticatedUserClaimsModel userClaims = _userSvc.GetUserClaims();
-            const string sql = "INSERT INTO PickupRequests (UserId, Location, Latitude, Longitude, ContactName, ContactNumber, Status) VALUES (@UserId, @Location, @Latitude, @Longitude, @ContactName, @ContactNumber, @Status);";
+            const string sql = "INSERT INTO PickupRequests (UserId, Location, Latitude, Longitude, ContactName, ContactNumber, Status, Notes) VALUES (@UserId, @Location, @Latitude, @Longitude, @ContactName, @ContactNumber, @Status, @Notes);";
             var connection = _dbConnection.Connection;
             int rows = connection.Execute(sql, new
             {
@@ -33,7 +33,8 @@ namespace feeddcity.Services
                 model.Longitude,
                 model.ContactName,
                 model.ContactNumber, 
-                Status = PickUpStatus.Pending
+                Status = PickUpStatus.Pending,
+                model.Notes
             });
             return rows;
         }

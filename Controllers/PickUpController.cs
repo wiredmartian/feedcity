@@ -29,7 +29,7 @@ namespace feeddcity.Controllers
                 int result = _pickUp.RequestPickUp(model);
                 if (result == 0)
                 {
-                    return BadRequest(new {message = "Failed to create a pickup"});
+                    return BadRequest(new { message = "Failed to create a pickup"});
                 }
                 return Ok(new { message = "Pick up requested created!" });
             }
