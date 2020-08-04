@@ -39,7 +39,6 @@ namespace feeddcity.Services
             
             const string sql = "INSERT INTO Users (FirstName, LastName, Email, UserName, HashedPassword) VALUES (@FirstName, @LastName, @Email, @UserName, @HashedPassword);";
             var connection = _dbConnection.Connection;
-            // connection.Open();
             int affectedRows = connection.Execute(sql, new
             {
                 user.FirstName,
@@ -48,7 +47,6 @@ namespace feeddcity.Services
                 UserName = user.EmailAddress,
                 hashedPassword
             });
-            // connection.Close();
             return affectedRows;
         }
 
