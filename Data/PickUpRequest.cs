@@ -10,6 +10,7 @@ namespace feeddcity.Data
         public string Longitude { get; set; }
         public string ContactName { get; set; }
         public string ContactNumber { get; set; }
+        public string UserId { get; set; }
         public string Notes { get; set; }
         public PickUpStatus Status { get; set; }
         public DateTime RequestedOn { get; set; }
