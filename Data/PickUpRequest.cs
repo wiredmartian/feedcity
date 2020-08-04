@@ -14,7 +14,13 @@ namespace feeddcity.Data
         public string Notes { get; set; }
         public PickUpStatus Status { get; set; }
         public DateTime RequestedOn { get; set; }
-        public DateTime? ClosedOn { get; set; } 
+        public DateTime? ClosedOn { get; set; }
+
+        public PickUpRequest()
+        {
+            RequestedOn = DateTime.UtcNow;
+            Status = PickUpStatus.Pending;
+        }
     }
 
     public enum PickUpStatus
