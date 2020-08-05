@@ -26,8 +26,7 @@ namespace feeddcity.Services
         {
             AuthenticatedUserClaimsModel userClaims = _userSvc.GetUserClaims();
             const string sql = "INSERT INTO PickupRequests (UserId, Location, Latitude, Longitude, ContactName, ContactNumber, Status, Notes) VALUES (@UserId, @Location, @Latitude, @Longitude, @ContactName, @ContactNumber, @Status, @Notes);";
-            MySqlConnection connection = _dbConnection.Connection;
-            int rows = connection.Execute(sql, new
+            int rows = _dbConnection.Connection.Execute(sql, new
             {
                 userClaims.UserId,
                 model.Location,
@@ -44,15 +43,13 @@ namespace feeddcity.Services
         public int UpdatePickUpStatus(PickUpStatus status, int pickUpId)
         {
             const string sql = "UPDATE PickupRequests SET Status = @PickUpStatus WHERE Id = @PickUpId;";
-            MySqlConnection connection = _dbConnection.Connection;
-            return connection.Execute(sql, new { PickUpStatus = status, PickUpId = pickUpId });
+            return  _dbConnection.Connection.Execute(sql, new { PickUpStatus = status, PickUpId = pickUpId });
         }
 
         public List<PickUpRequest> GetPickUpRequests(PickUpStatus status)
         {
-            MySqlConnection connection = _dbConnection.Connection;
             const string query = "SELECT * FROM PickupRequests WHERE Status = @PickUpStatus;";
-            var requests = connection.Query<PickUpRequest>(query, new {PickUpStatus = status});
+            var requests = _dbConnection.Connection.Query<PickUpRequest>(query, new {PickUpStatus = status});
             return requests.ToList();
         }
 
