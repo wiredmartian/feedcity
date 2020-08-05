@@ -22,6 +22,7 @@ namespace feeddcity.Data
         Pending,
         Accepted,
         Rejected,
-        Completed
+        Completed,
+        Cancelled
     }
 }
