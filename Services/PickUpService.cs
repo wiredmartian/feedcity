@@ -38,5 +38,12 @@ namespace feeddcity.Services
             });
             return rows;
         }
+
+        public int UpdatePickUpStatus(PickUpStatus status, int pickUpId)
+        {
+            const string sql = "UPDATE PickupRequests SET Status = @PickUpStatus WHERE Id = @PickUpId;";
+            var connection = _dbConnection.Connection;
+            return connection.Execute(sql, new { PickUpStatus = status, PickUpId = pickUpId });
+        }
     }
 }
