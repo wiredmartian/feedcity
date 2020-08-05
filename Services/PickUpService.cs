@@ -16,7 +16,7 @@ namespace feeddcity.Services
         
         private readonly IUser _userSvc;
         private readonly DbConnection _dbConnection;
-        public PickUpService(ICommon common, IUser userSvc, DbConnection dbConnection)
+        public PickUpService(IUser userSvc, DbConnection dbConnection)
         {
             _userSvc = userSvc;
             _dbConnection = dbConnection;
@@ -61,12 +61,26 @@ namespace feeddcity.Services
             const string sql = "SELECT * FROM PickupRequests WHERE Id = @PickUpId;";
             return _dbConnection.Connection.QueryFirst<PickUpRequest>(sql, new { PickUpId = pickUpId });
         }
+        public List<PickUpRequest> GetUserPickUpRequests(int userId)
+        {
+            const string sql = "SELECT * FROM PickupRequests WHERE UserId = @UserId;";
+            return _dbConnection.Connection.Query<PickUpRequest>(sql, new { UserId = userId }).ToList();
+        }
+
+        public List<PickUpRequest> GetUserPickUpRequests()
+        {
+            AuthenticatedUserClaimsModel userClaims = _userSvc.GetUserClaims();
+            const string sql = "SELECT * FROM PickupRequests WHERE UserId = @UserId;";
+            return _dbConnection.Connection.Query<PickUpRequest>(sql, new { UserId = userClaims.UserId }).ToList();
+        }
 
         public int CompletePickUpRequest(int pickUpId)
         {
             DateTime completedOn = DateTime.UtcNow;
             const string sql = "UPDATE PickupRequests SET Status = @PickUpStatus, ClosedOn = @CompleteDate WHERE Id = @PickUpId;";
-            return  _dbConnection.Connection.Execute(sql, new { PickUpStatus = 3, CompleteDate = completedOn, PickUpId = pickUpId });
+            return _dbConnection.Connection.Execute(sql, new { PickUpStatus = 3, CompleteDate = completedOn, PickUpId = pickUpId });
         }
+
+        
     }
 }
