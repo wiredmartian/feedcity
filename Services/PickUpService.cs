@@ -56,12 +56,17 @@ namespace feeddcity.Services
             return requests.ToList();
         }
 
+        public PickUpRequest GetSinglePickupRequest(int pickUpId)
+        {
+            const string sql = "SELECT * FROM PickupRequests WHERE Id = @PickUpId;";
+            return _dbConnection.Connection.QueryFirst<PickUpRequest>(sql, new { PickUpId = pickUpId });
+        }
+
         public int CompletePickUpRequest(int pickUpId)
         {
             DateTime completedOn = DateTime.UtcNow;
             const string sql = "UPDATE PickupRequests SET Status = @PickUpStatus, ClosedOn = @CompleteDate WHERE Id = @PickUpId;";
-            MySqlConnection connection = _dbConnection.Connection;
-            return connection.Execute(sql, new { PickUpStatus = 3, CompleteDate = completedOn, PickUpId = pickUpId });
+            return  _dbConnection.Connection.Execute(sql, new { PickUpStatus = 3, CompleteDate = completedOn, PickUpId = pickUpId });
         }
     }
 }

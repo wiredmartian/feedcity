@@ -10,5 +10,7 @@ namespace feeddcity.Interfaces
         int UpdatePickUpStatus(PickUpStatus status, int pickUpId);
         List<PickUpRequest> GetPickUpRequests(PickUpStatus status);
         public int CompletePickUpRequest(int pickUpId);
+        public PickUpRequest GetSinglePickupRequest(int pickUpId);
+
     }
 }
