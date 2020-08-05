@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using Dapper;
 using feeddcity.Common;
 using feeddcity.Data;
@@ -10,12 +12,10 @@ namespace feeddcity.Services
     public class PickUpService : IPickUp
     {
         
-        private readonly ICommon _common;
         private readonly IUser _userSvc;
         private readonly DbConnection _dbConnection;
         public PickUpService(ICommon common, IUser userSvc, DbConnection dbConnection)
         {
-            _common = common;
             _userSvc = userSvc;
             _dbConnection = dbConnection;
         }
@@ -44,6 +44,14 @@ namespace feeddcity.Services
             const string sql = "UPDATE PickupRequests SET Status = @PickUpStatus WHERE Id = @PickUpId;";
             var connection = _dbConnection.Connection;
             return connection.Execute(sql, new { PickUpStatus = status, PickUpId = pickUpId });
+        }
+
+        public List<PickUpRequest> GetPickUpRequests(PickUpStatus status)
+        {
+            var connection = _dbConnection.Connection;
+            const string query = "SELECT * FROM PickupRequests WHERE Status = @PickUpStatus;";
+            var requests = connection.Query<PickUpRequest>(query, new {PickUpStatus = status});
+            return requests.ToList();
         }
     }
 }
