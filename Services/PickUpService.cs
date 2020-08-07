@@ -2,12 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Dapper;
-using feeddcity.Common;
 using feeddcity.Data;
 using feeddcity.Interfaces;
 using feeddcity.Models.PickUp;
 using feeddcity.Models.User;
-using MySql.Data.MySqlClient;
 
 namespace feeddcity.Services
 {
