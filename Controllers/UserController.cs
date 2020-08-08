@@ -13,10 +13,10 @@ namespace feeddcity.Controllers
     [Authorize]
     public class UserController : ControllerBase
     {
-        private readonly IUser userSvc;
+        private readonly IUser _userSvc;
         public UserController(IUser userSvc)
         {
-            this.userSvc = userSvc;
+            this._userSvc = userSvc;
         }
         [AllowAnonymous]
         [HttpPost]
@@ -29,13 +29,13 @@ namespace feeddcity.Controllers
 
             try
             {
-                User userExists = userSvc.GetUser(userModel.EmailAddress);
+                User userExists = _userSvc.GetUser(userModel.EmailAddress);
                 if (userExists != null)
                 {
                     return BadRequest(new {message = $"A user with email {userModel.EmailAddress} is already exists"});
                 }
 
-                int affectedRows = userSvc.CreateUser(userModel);
+                int affectedRows = _userSvc.CreateUser(userModel);
                 if (affectedRows == 0)
                 {
                     return BadRequest(new {message = "Failed to create user account"});
@@ -60,13 +60,13 @@ namespace feeddcity.Controllers
             }
             try
             {
-                User currentUser = userSvc.AuthenticateUser(model.EmailAddress, model.Password);
+                User currentUser = _userSvc.AuthenticateUser(model.EmailAddress, model.Password);
                 if (currentUser == null)
                 {
                     return BadRequest(new { message = "Incorrect email or password" });
                 }
 
-                string token = userSvc.GenerateAuthToken(currentUser);
+                string token = _userSvc.GenerateAuthToken(currentUser);
                 return Ok(new { token = token });
             }
             catch (Exception e)

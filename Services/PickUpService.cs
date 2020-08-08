@@ -68,7 +68,6 @@ namespace feeddcity.Services
             const string sql = "SELECT * FROM PickupRequests WHERE UserId = @UserId;";
             return _dbConnection.Connection.Query<PickUpRequest>(sql, new { UserId = userClaims.UserId }).ToList();
         }
-
         public int CompletePickUpRequest(int pickUpId)
         {
             DateTime completedOn = DateTime.UtcNow;

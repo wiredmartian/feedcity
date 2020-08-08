@@ -1,5 +1,7 @@
 using System;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using feeddcity.Interfaces;
 using feeddcity.Models.PickUp;
 using Microsoft.AspNetCore.Authorization;
@@ -35,7 +37,7 @@ namespace feeddcity.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(new { message = e.Message });
+                return StatusCode(500, new {message = e.Message});
             }
         }
     }
