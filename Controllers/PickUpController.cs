@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using feeddcity.Data;
 using feeddcity.Interfaces;
 using feeddcity.Models.PickUp;
 using Microsoft.AspNetCore.Authorization;
@@ -20,6 +21,7 @@ namespace feeddcity.Controllers
         {
             _pickUp = pickUp;
         }
+        [HttpPost]
         public IActionResult CreatePickUpRequest([FromBody] PickUpRequestModel model)
         {
             try
@@ -34,6 +36,20 @@ namespace feeddcity.Controllers
                     return BadRequest(new { message = "Failed to create a pickup"});
                 }
                 return Ok(new { message = "Pick up requested created!" });
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new {message = e.Message});
+            }
+        }
+        [HttpGet]
+        [Route("{pickupId}")]
+        public ActionResult<PickUpRequest> GetPickUpRequest(int pickupId)
+        {
+            try
+            {
+                PickUpRequest pickUpRequest = _pickUp.GetSinglePickupRequest(pickupId);
+                return Ok(pickUpRequest);
             }
             catch (Exception e)
             {
