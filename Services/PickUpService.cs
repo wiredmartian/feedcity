@@ -74,6 +74,14 @@ namespace feeddcity.Services
             const string sql = "UPDATE PickupRequests SET Status = @PickUpStatus, ClosedOn = @CompleteDate WHERE Id = @PickUpId;";
             return _dbConnection.Connection.Execute(sql, new { PickUpStatus = 3, CompleteDate = completedOn, PickUpId = pickUpId });
         }
+        public int CancelPickUpRequest(int pickUpId)
+        {
+            AuthenticatedUserClaimsModel userClaims = _userSvc.GetUserClaims();
+            DateTime completedOn = DateTime.UtcNow;
+            const string sql = "UPDATE PickupRequests SET Status = @PickUpStatus, ClosedOn = @CompleteDate WHERE Id = @PickUpId AND UserId = @UserId;";
+            return _dbConnection.Connection.Execute(sql, new { PickUpStatus = 3, CompleteDate = completedOn, PickUpId = pickUpId, UserId = userClaims.UserId });
+
+        }
 
         public List<PickUpRequest> GetActiveRequests()
         {

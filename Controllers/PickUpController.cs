@@ -59,13 +59,32 @@ namespace feeddcity.Controllers
         }
 
         [HttpGet]
-        [Route("active")]
+        [Route("active-requests")]
         public ActionResult<List<PickUpRequest>> GetActiveRequests()
         {
             try
             {
                 List<PickUpRequest> requests = _pickUp.GetActiveRequests();
                 return Ok(requests);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new {message = e.Message});
+            }
+        }
+
+        [HttpPost]
+        [Route("cancel-request/{id}")]
+        public IActionResult CancelPickUpRequest(int id)
+        {
+            try
+            {
+                int cancelled = _pickUp.CancelPickUpRequest(id);
+                if (cancelled == 0)
+                {
+                    return BadRequest(new {error = "Failed to cancel request" });
+                }
+                return Ok(new {message = "Request cancelled!"});
             }
             catch (Exception e)
             {
