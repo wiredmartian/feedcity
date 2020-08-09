@@ -30,8 +30,7 @@ namespace feeddcity
             services.AddSingleton<IUser, UserService>();
             services.AddSingleton<IPickUp, PickUpService>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddTransient<DbConnection>(provider =>
-                new DbConnection(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddTransient(provider => new DbConnection(Configuration.GetConnectionString("DefaultConnection")));
             services.AddControllers();
             
             /*** Configure Bearer Auth */

@@ -53,10 +53,8 @@ namespace feeddcity.Services
         public User GetUser(string emailAddress)
         {
             var connection = _dbConnection.Connection;
-            // connection.Open();
             string sql = "SELECT * from Users WHERE Email = @EmailAddress;";
             User user = connection.QueryFirstOrDefault<User>(sql, new { EmailAddress = emailAddress });
-            // connection.Close();
             return user;
         }
 
@@ -80,6 +78,12 @@ namespace feeddcity.Services
                 }
             }
             return user;
+        }
+
+        public void LogLastSignIn(int userId)
+        {
+            const string sql = "UPDATE Users SET LastSignIn = @LastSignIn WHERE Id = @Id;";
+            _dbConnection.Connection.Execute(sql, new {LastSignIn = DateTime.Now, Id = userId});
         }
 
         public string GenerateAuthToken(User user)

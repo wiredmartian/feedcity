@@ -5,6 +5,7 @@ using feeddcity.Interfaces;
 using feeddcity.Models.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MySql.Data.MySqlClient;
 
 namespace feeddcity.Controllers
 {
@@ -13,10 +14,10 @@ namespace feeddcity.Controllers
     [Authorize]
     public class UserController : ControllerBase
     {
-        private readonly IUser userSvc;
+        private readonly IUser _userSvc;
         public UserController(IUser userSvc)
         {
-            this.userSvc = userSvc;
+            this._userSvc = userSvc;
         }
         [AllowAnonymous]
         [HttpPost]
@@ -29,23 +30,28 @@ namespace feeddcity.Controllers
 
             try
             {
-                User userExists = userSvc.GetUser(userModel.EmailAddress);
+                User userExists = _userSvc.GetUser(userModel.EmailAddress);
                 if (userExists != null)
                 {
-                    return BadRequest(new {message = $"A user with email {userModel.EmailAddress} is already exists"});
+                    return BadRequest(new {error = $"A user with email {userModel.EmailAddress} is already exists"});
                 }
 
-                int affectedRows = userSvc.CreateUser(userModel);
+                int affectedRows = _userSvc.CreateUser(userModel);
                 if (affectedRows == 0)
                 {
-                    return BadRequest(new {message = "Failed to create user account"});
+                    return BadRequest(new {error = "Failed to create user account"});
                 }
 
                 return Ok(new {message = "User created"});
             }
+            catch (MySqlException sqlException)
+            {
+                Console.WriteLine(sqlException);
+                return StatusCode(500, new {error = "Something went horribly wrong"});
+            }
             catch (Exception e)
             {
-                return BadRequest(new {message = e.Message });
+                return StatusCode(500, new {error = e.Message });
 
             }
         }
@@ -58,21 +64,29 @@ namespace feeddcity.Controllers
             {
                 return BadRequest(new { message = "Incorrect email or password" });
             }
+
             try
             {
-                User currentUser = userSvc.AuthenticateUser(model.EmailAddress, model.Password);
+                User currentUser = _userSvc.AuthenticateUser(model.EmailAddress, model.Password);
                 if (currentUser == null)
                 {
-                    return BadRequest(new { message = "Incorrect email or password" });
+                    return BadRequest(new {message = "Incorrect email or password"});
                 }
 
-                string token = userSvc.GenerateAuthToken(currentUser);
-                return Ok(new { token = token });
+                string token = _userSvc.GenerateAuthToken(currentUser);
+                _userSvc.LogLastSignIn(currentUser.Id);
+                return Ok(new {token});
+            }
+            catch (MySqlException sqlException)
+            {
+                Console.WriteLine(sqlException);
+                return StatusCode(500, new {error = "Something went horribly wrong"});
             }
             catch (Exception e)
             {
-                return BadRequest(new { message = e.Message });
+                return StatusCode(500, new {error = e.Message});
             }
+            
         }
     }
 }
