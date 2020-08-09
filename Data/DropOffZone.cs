@@ -8,6 +8,7 @@ namespace feeddcity.Data
         public string Longitude { get; set; }
         public string Province { get; set; }
         public string City { get; set; }
+        public bool Active { get; set; }
         public string StreetName { get; set; }
         public string ContactName { get; set; }
         public string ContactNumber { get; set; }
