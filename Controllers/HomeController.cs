@@ -3,12 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 namespace feeddcity.Controllers
 {
     [ApiController]
+    [Route("api/[controller]")]
     public class HomeController : ControllerBase
     {
-        [Route("home")]
         public IActionResult Index()
         {
-            return Ok("Welcome");
+            return Ok(new {Message = "Welcome"});
         }
     }
 }

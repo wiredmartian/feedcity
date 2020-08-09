@@ -91,5 +91,24 @@ namespace feeddcity.Controllers
                 return StatusCode(500, new {message = e.Message});
             }
         }
+
+        [HttpPost]
+        [Route("accept-request/{id}")]
+        public IActionResult AcceptRequest(int id)
+        {
+            try
+            {
+                int accepted = _pickUp.AcceptPickUpRequest(id);
+                if (accepted == 0)
+                {
+                    return BadRequest(new {error = "Failed to accept request"});
+                }
+                return Ok(new {message = "Request accepted!"});
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new {message = e.Message});
+            }
+        }
     }
 }

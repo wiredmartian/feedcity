@@ -51,6 +51,22 @@ namespace feeddcity.Services
             return requests.ToList();
         }
 
+        public int AcceptPickUpRequest(int pickUpId)
+        {
+            var request = GetSinglePickupRequest(pickUpId);
+            if (request == null)
+            {
+                return 0;
+            }
+            if (request.AcceptedBy != 0)
+            {
+                throw new Exception("Pick up has already been accepted by someone else");
+            }
+            int currentUser = _userSvc.GetUserClaims().UserId;
+            const string sql = "UPDATE PickupRequests SET Status = 2, AcceptedBy = @AcceptedBy WHERE Id = @Id;";
+            return _dbConnection.Connection.Execute(sql, new {AcceptedBy = currentUser, Id = pickUpId});
+        }
+
         public PickUpRequest GetSinglePickupRequest(int pickUpId)
         {
             const string sql = "SELECT * FROM PickupRequests WHERE Id = @PickUpId;";
