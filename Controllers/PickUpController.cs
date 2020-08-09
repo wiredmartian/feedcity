@@ -8,6 +8,7 @@ using feeddcity.Interfaces;
 using feeddcity.Models.PickUp;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MySql.Data.MySqlClient;
 
 namespace feeddcity.Controllers
 {
@@ -38,6 +39,11 @@ namespace feeddcity.Controllers
                 }
                 return Ok(new { message = "Pick up requested created!" });
             }
+            catch (MySqlException sqlException)
+            {
+                Console.WriteLine(sqlException);
+                return StatusCode(500, new {error = "Something went horribly wrong"});
+            }
             catch (Exception e)
             {
                 return StatusCode(500, new {message = e.Message});
@@ -51,6 +57,11 @@ namespace feeddcity.Controllers
             {
                 PickUpRequest pickUpRequest = _pickUp.GetSinglePickupRequest(pickupId);
                 return Ok(pickUpRequest);
+            }
+            catch (MySqlException sqlException)
+            {
+                Console.WriteLine(sqlException);
+                return StatusCode(500, new {error = "Something went horribly wrong"});
             }
             catch (Exception e)
             {
@@ -66,6 +77,11 @@ namespace feeddcity.Controllers
             {
                 List<PickUpRequest> requests = _pickUp.GetActiveRequests();
                 return Ok(requests);
+            }
+            catch (MySqlException sqlException)
+            {
+                Console.WriteLine(sqlException);
+                return StatusCode(500, new {error = "Something went horribly wrong"});
             }
             catch (Exception e)
             {
@@ -86,6 +102,11 @@ namespace feeddcity.Controllers
                 }
                 return Ok(new {message = "Request cancelled!"});
             }
+            catch (MySqlException sqlException)
+            {
+                Console.WriteLine(sqlException);
+                return StatusCode(500, new {error = "Something went horribly wrong"});
+            }
             catch (Exception e)
             {
                 return StatusCode(500, new {message = e.Message});
@@ -104,6 +125,11 @@ namespace feeddcity.Controllers
                     return BadRequest(new {error = "Failed to accept request"});
                 }
                 return Ok(new {message = "Request accepted!"});
+            }
+            catch (MySqlException sqlException)
+            {
+                Console.WriteLine(sqlException);
+                return StatusCode(500, new {error = "Something went horribly wrong"});
             }
             catch (Exception e)
             {

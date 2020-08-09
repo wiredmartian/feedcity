@@ -53,10 +53,8 @@ namespace feeddcity.Services
         public User GetUser(string emailAddress)
         {
             var connection = _dbConnection.Connection;
-            // connection.Open();
             string sql = "SELECT * from Users WHERE Email = @EmailAddress;";
             User user = connection.QueryFirstOrDefault<User>(sql, new { EmailAddress = emailAddress });
-            // connection.Close();
             return user;
         }
 

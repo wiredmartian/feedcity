@@ -5,6 +5,7 @@ using feeddcity.Interfaces;
 using feeddcity.Models.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MySql.Data.MySqlClient;
 
 namespace feeddcity.Controllers
 {
@@ -43,6 +44,11 @@ namespace feeddcity.Controllers
 
                 return Ok(new {message = "User created"});
             }
+            catch (MySqlException sqlException)
+            {
+                Console.WriteLine(sqlException);
+                return StatusCode(500, new {error = "Something went horribly wrong"});
+            }
             catch (Exception e)
             {
                 return StatusCode(500, new {error = e.Message });
@@ -58,21 +64,29 @@ namespace feeddcity.Controllers
             {
                 return BadRequest(new { message = "Incorrect email or password" });
             }
+
             try
             {
                 User currentUser = _userSvc.AuthenticateUser(model.EmailAddress, model.Password);
                 if (currentUser == null)
                 {
-                    return BadRequest(new { message = "Incorrect email or password" });
+                    return BadRequest(new {message = "Incorrect email or password"});
                 }
+
                 string token = _userSvc.GenerateAuthToken(currentUser);
                 _userSvc.LogLastSignIn(currentUser.Id);
-                return Ok(new { token });
+                return Ok(new {token});
+            }
+            catch (MySqlException sqlException)
+            {
+                Console.WriteLine(sqlException);
+                return StatusCode(500, new {error = "Something went horribly wrong"});
             }
             catch (Exception e)
             {
-                return StatusCode(500, new { error = e.Message });
+                return StatusCode(500, new {error = e.Message});
             }
+            
         }
     }
 }
