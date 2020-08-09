@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -50,6 +51,21 @@ namespace feeddcity.Controllers
             {
                 PickUpRequest pickUpRequest = _pickUp.GetSinglePickupRequest(pickupId);
                 return Ok(pickUpRequest);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new {message = e.Message});
+            }
+        }
+
+        [HttpGet]
+        [Route("active")]
+        public ActionResult<List<PickUpRequest>> GetActiveRequests()
+        {
+            try
+            {
+                List<PickUpRequest> requests = _pickUp.GetActiveRequests();
+                return Ok(requests);
             }
             catch (Exception e)
             {

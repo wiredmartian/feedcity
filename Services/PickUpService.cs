@@ -75,6 +75,12 @@ namespace feeddcity.Services
             return _dbConnection.Connection.Execute(sql, new { PickUpStatus = 3, CompleteDate = completedOn, PickUpId = pickUpId });
         }
 
+        public List<PickUpRequest> GetActiveRequests()
+        {
+            const string sql = "SELECT * FROM PickupRequests WHERE ClosedOn IS NULL;";
+            return _dbConnection.Connection.Query<PickUpRequest>(sql).ToList();
+
+        }
         
     }
 }
