@@ -69,19 +69,19 @@ namespace feeddcity.Services
 
         public PickUpRequest GetSinglePickupRequest(int pickUpId)
         {
-            const string sql = "SELECT * FROM PickupRequests WHERE Id = @PickUpId;";
-            return _dbConnection.Connection.QueryFirst<PickUpRequest>(sql, new { PickUpId = pickUpId });
+            const string sql = "SELECT * FROM PickupRequests WHERE Id = @PickUpId AND ClosedOn IS NULL;";
+            return _dbConnection.Connection.QuerySingleOrDefault<PickUpRequest>(sql, new { PickUpId = pickUpId });
         }
         public List<PickUpRequest> GetUserPickUpRequests(int userId)
         {
-            const string sql = "SELECT * FROM PickupRequests WHERE UserId = @UserId;";
+            const string sql = "SELECT * FROM PickupRequests WHERE UserId = @UserId AND ClosedOn IS NULL;";
             return _dbConnection.Connection.Query<PickUpRequest>(sql, new { UserId = userId }).ToList();
         }
 
         public List<PickUpRequest> GetUserPickUpRequests()
         {
             AuthenticatedUserClaimsModel userClaims = _userSvc.GetUserClaims();
-            const string sql = "SELECT * FROM PickupRequests WHERE UserId = @UserId;";
+            const string sql = "SELECT * FROM PickupRequests WHERE UserId = @UserId AND ClosedOn IS NULL;";
             return _dbConnection.Connection.Query<PickUpRequest>(sql, new { UserId = userClaims.UserId }).ToList();
         }
         public int CompletePickUpRequest(int pickUpId)
