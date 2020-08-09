@@ -82,6 +82,12 @@ namespace feeddcity.Services
             return user;
         }
 
+        public void LogLastSignIn(int userId)
+        {
+            const string sql = "UPDATE Users SET LastSignIn = @LastSignIn WHERE Id = @Id;";
+            _dbConnection.Connection.Execute(sql, new {LastSignIn = DateTime.Now, Id = userId});
+        }
+
         public string GenerateAuthToken(User user)
         {
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();

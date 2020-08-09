@@ -32,20 +32,20 @@ namespace feeddcity.Controllers
                 User userExists = _userSvc.GetUser(userModel.EmailAddress);
                 if (userExists != null)
                 {
-                    return BadRequest(new {message = $"A user with email {userModel.EmailAddress} is already exists"});
+                    return BadRequest(new {error = $"A user with email {userModel.EmailAddress} is already exists"});
                 }
 
                 int affectedRows = _userSvc.CreateUser(userModel);
                 if (affectedRows == 0)
                 {
-                    return BadRequest(new {message = "Failed to create user account"});
+                    return BadRequest(new {error = "Failed to create user account"});
                 }
 
                 return Ok(new {message = "User created"});
             }
             catch (Exception e)
             {
-                return BadRequest(new {message = e.Message });
+                return StatusCode(500, new {error = e.Message });
 
             }
         }
@@ -65,13 +65,13 @@ namespace feeddcity.Controllers
                 {
                     return BadRequest(new { message = "Incorrect email or password" });
                 }
-
                 string token = _userSvc.GenerateAuthToken(currentUser);
-                return Ok(new { token = token });
+                _userSvc.LogLastSignIn(currentUser.Id);
+                return Ok(new { token });
             }
             catch (Exception e)
             {
-                return BadRequest(new { message = e.Message });
+                return StatusCode(500, new { error = e.Message });
             }
         }
     }
