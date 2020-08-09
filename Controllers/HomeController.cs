@@ -6,6 +6,7 @@ namespace feeddcity.Controllers
     [Route("api/[controller]")]
     public class HomeController : ControllerBase
     {
+        [HttpGet]
         public IActionResult Index()
         {
             return Ok(new {Message = "Welcome"});
