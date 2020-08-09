@@ -57,7 +57,7 @@ namespace feeddcity.Controllers
         }
         [AllowAnonymous]
         [HttpPost]
-        [Route("/api/user/token")]
+        [Route("token")]
         public IActionResult AuthUser([FromBody] LoginUserModel model)
         {
             if (!ModelState.IsValid)

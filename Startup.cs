@@ -31,7 +31,9 @@ namespace feeddcity
             services.AddSingleton<IPickUp, PickUpService>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient(provider => new DbConnection(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddSwaggerGen();
             services.AddControllers();
+            services.AddRouting(opts => opts.LowercaseUrls = true);
             
             /*** Configure Bearer Auth */
             byte[] jwtSecret = Encoding.ASCII.GetBytes(Configuration.GetValue<string>("AppSettings:JWTSecret"));
@@ -60,9 +62,11 @@ namespace feeddcity
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            app.UseHttpsRedirection();
-
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "FeeddCity API documentation");
+            });
             app.UseRouting();
             
             app.UseAuthentication();
