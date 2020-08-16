@@ -5,33 +5,28 @@ namespace feeddcity.Models.DropOff
     public class DropOffZoneModel
     {
         [Required(AllowEmptyStrings = false)]
+        [MaxLength(255)]
         public string PhysicalAddress { get; set; }
         
-        [Required]
-        public decimal Latitude { get; set; }
-        
-        [Required]
-        public decimal Longitude { get; set; }
+        [Required(AllowEmptyStrings = false)]
+        [MaxLength(50)]
+        public string Latitude { get; set; }
         
         [Required(AllowEmptyStrings = false)]
-        public string Province { get; set; }
+        [MaxLength(50)]
+        public string Longitude { get; set; }
         
         [Required(AllowEmptyStrings = false)]
-        public string City { get; set; }
-        
-        [Required(AllowEmptyStrings = false)]
-        public string StreetName { get; set; }
-        
-        [Required(AllowEmptyStrings = false)]
+        [MaxLength(255)]
         public string ContactName { get; set; }
         
-        [Required(AllowEmptyStrings = false)]
         [DataType(DataType.PhoneNumber)]
+        [Required(AllowEmptyStrings = false)]
         public string ContactNumber { get; set; }
         
-        [Required(AllowEmptyStrings = false)]
         [DataType(DataType.EmailAddress)]
+        [Required(AllowEmptyStrings = false)]
+        [MaxLength(255)]
         public string EmailAddress { get; set; }
-
     }
 }

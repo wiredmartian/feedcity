@@ -2,10 +2,11 @@ using System;
 using System.Security.Authentication;
 using feeddcity.Data;
 using feeddcity.Interfaces;
+using feeddcity.Models.DropOff;
 
 namespace feeddcity.Services
 {
-    public class DropOffService
+    public class DropOffService : IDropOff
     {
         private readonly DbConnection _dbConnection;
         private readonly IUser _userSvc;
@@ -15,7 +16,7 @@ namespace feeddcity.Services
             _userSvc = userSvc;
         }
 
-        public int CreateDropOff()
+        public int CreateDropOff(DropOffZoneModel model)
         {
             var userClaims = _userSvc.GetUserClaims();
             if (userClaims == null)
