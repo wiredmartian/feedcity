@@ -8,6 +8,9 @@ namespace feeddcity.Models.PickUp
         [MaxLength(255)]
         public string Location { get; set; }
         
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Please provide a drop of zone for this package")]
+        public string DropOffZoneId { get; set; }
+        
         [Required(AllowEmptyStrings = false)]
         [MaxLength(50)]
         public string Latitude { get; set; }

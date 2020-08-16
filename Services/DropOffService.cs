@@ -39,5 +39,11 @@ namespace feeddcity.Services
             });
             return rows;
         }
+
+        public DropOffZone GetDropOffZone(int zoneId)
+        {
+            const string sql = "SELECT * FROM DropOffZones WHERE Id = @ZoneId AND Active = TRUE;";
+            return _dbConnection.Connection.QueryFirstOrDefault<DropOffZone>(sql, new {ZoneId = zoneId});
+        }
     }
 }
