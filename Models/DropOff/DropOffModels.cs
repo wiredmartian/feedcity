@@ -17,8 +17,7 @@ namespace feeddcity.Models.DropOff
         public string Longitude { get; set; }
         
         [Required(AllowEmptyStrings = false)]
-        [MaxLength(100)]
-        public string Province { get; set; }
+        public int ProvinceId { get; set; }
         
         [Required(AllowEmptyStrings = false)]
         [MaxLength(100)]
