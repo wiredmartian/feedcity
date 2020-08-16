@@ -17,6 +17,18 @@ namespace feeddcity.Models.DropOff
         public string Longitude { get; set; }
         
         [Required(AllowEmptyStrings = false)]
+        [MaxLength(100)]
+        public string Province { get; set; }
+        
+        [Required(AllowEmptyStrings = false)]
+        [MaxLength(100)]
+        public string City { get; set; }
+        
+        [Required(AllowEmptyStrings = false)]
+        [MaxLength(100)]
+        public string StreetName { get; set; }
+        
+        [Required(AllowEmptyStrings = false)]
         [MaxLength(255)]
         public string ContactName { get; set; }
         

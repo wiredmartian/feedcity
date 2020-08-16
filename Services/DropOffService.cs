@@ -1,5 +1,6 @@
 using System;
 using System.Security.Authentication;
+using Dapper;
 using feeddcity.Data;
 using feeddcity.Interfaces;
 using feeddcity.Models.DropOff;
@@ -23,9 +24,20 @@ namespace feeddcity.Services
             {
                 throw new InvalidCredentialException("User claims not found against token");
             }
-            const string sql = "INSERT INTO DropOffZones (PhysicalAddress, Latitude, Longitude, Province, City, StreetName, ContactNumber, EmailAddress, Active) VALUES (@PhysicalAddress, @Latitude, @Longitude, @Province, @City, @StreetName, @ContactNumber, @EmailAddress, @Active);";
-            
-            throw new NotImplementedException();
+            const string sql = "INSERT INTO DropOffZones (PhysicalAddress, Latitude, Longitude, Province, City, StreetName, ContactName, ContactNumber, EmailAddress) VALUES (@PhysicalAddress, @Latitude, @Longitude, @Province, @City, @StreetName, @ContactName, @ContactNumber, @EmailAddress);";
+            int rows = _dbConnection.Connection.Execute(sql, new
+            {
+                model.PhysicalAddress,
+                model.Latitude,
+                model.Longitude,
+                model.Province,
+                model.City,
+                model.StreetName,
+                model.ContactName,
+                model.ContactNumber,
+                model.EmailAddress
+            });
+            return rows;
         }
     }
 }
