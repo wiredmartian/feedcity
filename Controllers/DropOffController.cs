@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using feeddcity.Data;
 using feeddcity.Interfaces;
 using feeddcity.Models.DropOff;
 using Microsoft.AspNetCore.Authorization;
@@ -19,7 +21,7 @@ namespace feeddcity.Controllers
         {
             _dropOff = dropOff;
         }
-
+        [HttpPost]
         public IActionResult CreateDropOffZone([FromBody] DropOffZoneModel model)
         {
             try
@@ -36,6 +38,26 @@ namespace feeddcity.Controllers
                 }
 
                 return Ok(new { message = "New drop off zone created!"});
+            }
+            catch (SqlException sqlException)
+            {
+                Console.WriteLine(sqlException);
+                return StatusCode(500, new {error = "Something went horribly wrong"});
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new {message = e.Message});
+            }
+        }
+        
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult<List<DropOffZone>> GetDropZones()
+        {
+            try
+            {
+                List<DropOffZone> dropZones = _dropOff.GetAllDropOffZones();
+                return Ok(dropZones);
             }
             catch (SqlException sqlException)
             {
