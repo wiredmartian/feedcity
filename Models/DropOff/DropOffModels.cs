@@ -1,15 +1,12 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace feeddcity.Models.PickUp
+namespace feeddcity.Models.DropOff
 {
-    public class PickUpRequestModel
+    public class DropOffZoneModel
     {
         [Required(AllowEmptyStrings = false)]
         [MaxLength(255)]
-        public string Location { get; set; }
-        
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Please provide a drop of zone for this package")]
-        public string DropOffZoneId { get; set; }
+        public string PhysicalAddress { get; set; }
         
         [Required(AllowEmptyStrings = false)]
         [MaxLength(50)]
@@ -20,6 +17,17 @@ namespace feeddcity.Models.PickUp
         public string Longitude { get; set; }
         
         [Required(AllowEmptyStrings = false)]
+        public int ProvinceId { get; set; }
+        
+        [Required(AllowEmptyStrings = false)]
+        [MaxLength(100)]
+        public string City { get; set; }
+        
+        [Required(AllowEmptyStrings = false)]
+        [MaxLength(100)]
+        public string StreetName { get; set; }
+        
+        [Required(AllowEmptyStrings = false)]
         [MaxLength(255)]
         public string ContactName { get; set; }
         
@@ -27,8 +35,9 @@ namespace feeddcity.Models.PickUp
         [Required(AllowEmptyStrings = false)]
         public string ContactNumber { get; set; }
         
-        [DataType(DataType.MultilineText)]
+        [DataType(DataType.EmailAddress)]
         [Required(AllowEmptyStrings = false)]
-        public string Notes { get; set; }
+        [MaxLength(255)]
+        public string EmailAddress { get; set; }
     }
 }

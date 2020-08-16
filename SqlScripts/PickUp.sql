@@ -2,6 +2,7 @@ CREATE TABLE PickupRequests (
     Id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     UserId INT(6) UNSIGNED,
     AcceptedBy INT(6) UNSIGNED,
+    DropOffZoneId INT(6) UNSIGNED,
     Location VARCHAR(255) NOT NULL,
     Latitude VARCHAR(50) NOT NULL,
     Longitude VARCHAR(50) NOT NULL,
@@ -12,5 +13,6 @@ CREATE TABLE PickupRequests (
     RequestedOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     ClosedOn TIMESTAMP,
     FOREIGN KEY (UserId) REFERENCES Users(Id),
-    FOREIGN KEY (AcceptedBy) REFERENCES Users(Id)
+    FOREIGN KEY (AcceptedBy) REFERENCES Users(Id),
+    FOREIGN KEY (DropOffZoneId) REFERENCES DropOffZones(Id),
 )
