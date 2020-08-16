@@ -6,7 +6,7 @@ namespace feeddcity.Data
         public string PhysicalAddress { get; set; }
         public string Latitude { get; set; }
         public string Longitude { get; set; }
-        public string Province { get; set; }
+        public string ProvinceId { get; set; }
         public string City { get; set; }
         public bool Active { get; set; }
         public string StreetName { get; set; }
