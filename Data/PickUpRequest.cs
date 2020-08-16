@@ -11,6 +11,7 @@ namespace feeddcity.Data
         public string ContactName { get; set; }
         public string ContactNumber { get; set; }
         public int UserId { get; set; }
+        public int DropOffZoneId { get; set; }
         public int AcceptedBy { get; set; }
         public string Notes { get; set; }
         public PickUpStatus Status { get; set; }

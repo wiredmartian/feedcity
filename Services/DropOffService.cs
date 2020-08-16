@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Authentication;
 using Dapper;
 using feeddcity.Data;
@@ -44,6 +46,12 @@ namespace feeddcity.Services
         {
             const string sql = "SELECT * FROM DropOffZones WHERE Id = @ZoneId AND Active = TRUE;";
             return _dbConnection.Connection.QueryFirstOrDefault<DropOffZone>(sql, new {ZoneId = zoneId});
+        }
+
+        public List<DropOffZone> GetAllDropOffZones()
+        {
+            const string sql = "SELECT * FROM DropOffZones WHERE Active = TRUE;";
+            return _dbConnection.Connection.Query<DropOffZone>(sql).ToList();
         }
     }
 }
