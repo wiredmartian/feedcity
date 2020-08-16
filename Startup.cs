@@ -29,6 +29,7 @@ namespace feeddcity
             services.AddSingleton<ICommon, Common.Common>();
             services.AddSingleton<IUser, UserService>();
             services.AddSingleton<IPickUp, PickUpService>();
+            services.AddSingleton<IDropOff, DropOffService>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient(provider => new DbConnection(Configuration.GetConnectionString("DefaultConnection")));
             services.AddSwaggerGen();
