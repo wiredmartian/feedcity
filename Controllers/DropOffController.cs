@@ -69,5 +69,25 @@ namespace feeddcity.Controllers
                 return StatusCode(500, new {message = e.Message});
             }
         }
+        
+        [HttpGet]
+        [Route("search")]
+        public ActionResult<List<DropOffZone>> SearchDropOffByAddress([FromQuery(Name = "address")] string address)
+        {
+            try
+            {
+                List<DropOffZone> dropZones = _dropOff.SearchDropOffZones(address);
+                return Ok(dropZones);
+            }
+            catch (SqlException sqlException)
+            {
+                Console.WriteLine(sqlException);
+                return StatusCode(500, new {error = "Something went horribly wrong"});
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new {message = e.Message});
+            }
+        }
     }
 }
