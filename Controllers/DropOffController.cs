@@ -130,7 +130,7 @@ namespace feeddcity.Controllers
         }
         [HttpGet]
         [Route("province-zones/{id}")]
-        public ActionResult<List<DropOffZone>> GetProvinceZones(int  id)
+        public ActionResult<List<DropOffZone>> GetProvinceZones([FromRoute(Name = "id")] int  id)
         {
             try
             {
