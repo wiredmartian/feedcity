@@ -51,12 +51,90 @@ namespace feeddcity.Controllers
         }
         
         [HttpGet]
-        [AllowAnonymous]
         public ActionResult<List<DropOffZone>> GetDropZones()
         {
             try
             {
                 List<DropOffZone> dropZones = _dropOff.GetAllDropOffZones();
+                return Ok(dropZones);
+            }
+            catch (SqlException sqlException)
+            {
+                Console.WriteLine(sqlException);
+                return StatusCode(500, new {error = "Something went horribly wrong"});
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new {message = e.Message});
+            }
+        }
+        
+        [HttpGet]
+        [Route("{id}")]
+        public ActionResult<DropOffZone> GetDropZone([FromRoute(Name = "id")] int id)
+        {
+            try
+            {
+               DropOffZone dropZone = _dropOff.GetDropOffZone(id);
+                return Ok(dropZone);
+            }
+            catch (SqlException sqlException)
+            {
+                Console.WriteLine(sqlException);
+                return StatusCode(500, new {error = "Something went horribly wrong"});
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new {message = e.Message});
+            }
+        }
+        
+        [HttpGet]
+        [Route("search-zones")]
+        public ActionResult<List<DropOffZone>> SearchDropOffByAddress([FromQuery(Name = "address")] string address)
+        {
+            try
+            {
+                List<DropOffZone> dropZones = _dropOff.SearchDropOffZones(address);
+                return Ok(dropZones);
+            }
+            catch (SqlException sqlException)
+            {
+                Console.WriteLine(sqlException);
+                return StatusCode(500, new {error = "Something went horribly wrong"});
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new {message = e.Message});
+            }
+        }
+        
+        [HttpGet]
+        [Route("all-zones")]
+        public ActionResult<List<DropOffZone>> GetAllDropOfZones()
+        {
+            try
+            {
+                List<DropOffZone> dropZones = _dropOff.GetAllDropOffZones();
+                return Ok(dropZones);
+            }
+            catch (SqlException sqlException)
+            {
+                Console.WriteLine(sqlException);
+                return StatusCode(500, new {error = "Something went horribly wrong"});
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new {message = e.Message});
+            }
+        }
+        [HttpGet]
+        [Route("province-zones/{id}")]
+        public ActionResult<List<DropOffZone>> GetProvinceZones([FromRoute(Name = "id")] int  id)
+        {
+            try
+            {
+                List<DropOffZone> dropZones = _dropOff.GetProvincialDropOffZones(id);
                 return Ok(dropZones);
             }
             catch (SqlException sqlException)
