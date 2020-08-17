@@ -56,8 +56,14 @@ namespace feeddcity.Services
 
         public List<DropOffZone> SearchDropOffZones(string searchTerm)
         {
-            const string sql = "SELECT * FROM DropOffZones WHERE PhysicalAddress LIKE @Address;";
+            const string sql = "SELECT * FROM DropOffZones WHERE Active = TRUE AND PhysicalAddress LIKE @Address;";
             return _dbConnection.Connection.Query<DropOffZone>(sql, new {Address = "%" + searchTerm + "%" }).ToList();
+        }
+
+        public List<DropOffZone> GetProvincialDropOffZones(int provinceId)
+        {
+            const string sql = "SELECT * FROM DropOffZones WHERE Active = TRUE AND ProvinceId = @ProvinceId;";
+            return _dbConnection.Connection.Query<DropOffZone>(sql, new {ProvinceId = provinceId}).ToList();
         }
     }
 }

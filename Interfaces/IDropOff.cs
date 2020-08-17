@@ -10,5 +10,6 @@ namespace feeddcity.Interfaces
         DropOffZone GetDropOffZone(int zoneId);
         List<DropOffZone> GetAllDropOffZones();
         List<DropOffZone> SearchDropOffZones(string searchTerm);
+        List<DropOffZone> GetProvincialDropOffZones(int provinceId);
     }
 }
