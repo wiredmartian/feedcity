@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -50,13 +51,9 @@ namespace feeddcity.Services
             return affectedRows;
         }
 
-        public User GetUser(string emailAddress)
-        {
-            var connection = _dbConnection.Connection;
-            string sql = "SELECT * from Users WHERE Email = @EmailAddress;";
-            User user = connection.QueryFirstOrDefault<User>(sql, new { EmailAddress = emailAddress });
-            return user;
-        }
+        public User GetUser(string emailAddress) => 
+            _dbConnection.Connection.QueryFirstOrDefault<User>("SELECT * from Users WHERE Email = @EmailAddress;", new { EmailAddress = emailAddress });
+        
 
         public User AuthenticateUser(string emailAddress, string password)
         {
@@ -80,11 +77,15 @@ namespace feeddcity.Services
             return user;
         }
 
-        public void LogLastSignIn(int userId)
+        public void ResetPassword(string emailAddress, string oldPassword, string newPassword)
         {
-            const string sql = "UPDATE Users SET LastSignIn = @LastSignIn WHERE Id = @Id;";
-            _dbConnection.Connection.Execute(sql, new {LastSignIn = DateTime.Now, Id = userId});
+            {
+                throw new Exception("New password cannot be the same as old password");
+            }
         }
+
+        public void LogLastSignIn(int userId) => 
+            _dbConnection.Connection.Execute("UPDATE Users SET LastSignIn = @LastSignIn WHERE Id = @Id;", new { LastSignIn = DateTime.Now, Id = userId });
 
         public string GenerateAuthToken(User user)
         {
