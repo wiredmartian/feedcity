@@ -35,7 +35,6 @@ namespace feeddcity.Controllers
                 {
                     return BadRequest(new {error = $"A user with email {userModel.EmailAddress} is already exists"});
                 }
-
                 int affectedRows = _userSvc.CreateUser(userModel);
                 if (affectedRows == 0)
                 {
@@ -71,6 +70,10 @@ namespace feeddcity.Controllers
                 if (currentUser == null)
                 {
                     return BadRequest(new {message = "Incorrect email or password"});
+                }
+                if (currentUser.Disabled)
+                {
+                    return BadRequest(new {message = "This user is disabled"});
                 }
 
                 string token = _userSvc.GenerateAuthToken(currentUser);
