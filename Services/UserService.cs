@@ -100,7 +100,7 @@ namespace feeddcity.Services
             Array.Copy(hash, 0, hashBytes, 16, 20);
             string hashedPassword = Convert.ToBase64String(hashBytes);
             const string sql = "UPDATE Users SET HashedPassword = @HashedPassword WHERE Id = @UserId;";
-            return _dbConnection.Connection.Execute(sql, new {HashedPassword = hashedPassword, Id = user.Id});
+            return _dbConnection.Connection.Execute(sql, new {HashedPassword = hashedPassword, UserId = user.Id});
         }
 
         public void LogLastSignIn(int userId) => 
