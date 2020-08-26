@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Authentication;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -77,11 +78,29 @@ namespace feeddcity.Services
             return user;
         }
 
-        public void ResetPassword(string emailAddress, string oldPassword, string newPassword)
+        public int ResetPassword(string oldPassword, string newPassword)
         {
+            AuthenticatedUserClaimsModel userClaims = GetUserClaims();
+            if (userClaims == null)
             {
-                throw new Exception("New password cannot be the same as old password");
+                throw new UnauthorizedAccessException("Incorrect username or password. Unexpected request!");
             }
+            
+            User user = AuthenticateUser(userClaims.UserName, oldPassword);
+            if (user == null)
+            {
+                throw new AuthenticationException("Incorrect username or password");
+            }
+            byte[] salt = new byte[16];
+            new RNGCryptoServiceProvider().GetBytes(salt);
+            var rfcBytes = new Rfc2898DeriveBytes(newPassword, salt, 10000);
+            byte[] hash = rfcBytes.GetBytes(20);
+            byte[] hashBytes = new byte[36];
+            Array.Copy(salt, 0, hashBytes, 0, 16);
+            Array.Copy(hash, 0, hashBytes, 16, 20);
+            string hashedPassword = Convert.ToBase64String(hashBytes);
+            const string sql = "UPDATE Users SET HashedPassword = @HashedPassword WHERE Id = @UserId;";
+            return _dbConnection.Connection.Execute(sql, new {HashedPassword = hashedPassword, Id = user.Id});
         }
 
         public void LogLastSignIn(int userId) => 

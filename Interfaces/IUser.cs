@@ -9,6 +9,7 @@ namespace feeddcity.Interfaces
         void LogLastSignIn(int userId);
         User GetUser(string emailAddress);
         User AuthenticateUser(string emailAddress, string password);
+        int ResetPassword(string oldPassword, string newPassword);
         string GenerateAuthToken(User user);
         AuthenticatedUserClaimsModel GetUserClaims();
     }

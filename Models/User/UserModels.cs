@@ -23,6 +23,16 @@ namespace feeddcity.Models.User
         [MinLength(8, ErrorMessage = "Password must at least be 8 characters long")]
         public string Password { get; set; }
     }
+
+    public class ResetPasswordModel
+    {
+        [Required]
+        public string oldPassword { get; set; }
+        
+        [Required]
+        [MinLength(8, ErrorMessage = "Password must at least be 8 characters long")]
+        public string newPassword { get; set; }
+    }
     public class AuthenticatedUserClaimsModel
     {
         public int UserId { get; set; }

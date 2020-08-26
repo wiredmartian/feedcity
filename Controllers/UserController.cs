@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Security.Authentication;
 using feeddcity.Data;
 using feeddcity.Interfaces;
 using feeddcity.Models.User;
@@ -90,6 +91,47 @@ namespace feeddcity.Controllers
                 return StatusCode(500, new {error = e.Message});
             }
             
+        }
+
+        [HttpPatch]
+        [Route("reset-password")]
+        public IActionResult ResetPassword([FromBody] ResetPasswordModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState.Values.SelectMany(err => err.Errors[0].ErrorMessage));
+            }
+
+            try
+            {
+                var resetPassword = _userSvc.ResetPassword(model.oldPassword, model.newPassword);
+                if (resetPassword == 0)
+                {
+                    return BadRequest(new { error = "Failed to reset password. Unknown error has occured" });
+                }
+
+                return Ok(new {message = "Password reset successful!"});
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                Console.WriteLine(e);
+                return StatusCode(400, new { error = e.Message });
+            }
+            catch (AuthenticationException e)
+            {
+                Console.WriteLine(e);
+                return StatusCode(400, new { error = e.Message });
+            }
+            catch (MySqlException sqlException)
+            {
+                Console.WriteLine(sqlException);
+                return StatusCode(500, new { error = "Something went horribly wrong" });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return StatusCode(500, new { error = e.Message });
+            }
         }
     }
 }
